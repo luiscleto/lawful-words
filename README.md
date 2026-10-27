@@ -9,7 +9,8 @@ It is the bottom layer for `lawful-bytes` (bytes packed four to a word): with th
 about packed data reason about numbers and bytes, never about 32 separate bits.
 
 Status: the laws (`LAWS.bend`, definitions in `defs.bend`) were reviewed in three rounds by
-Claude, GPT and Grok (`reviews/`). Proofs are in progress.
+Claude, GPT and Grok (`reviews/`), and all 83 are proven (`PROOF.bend`): `./check.sh` checks them
+with `bend` and with the Lean-proven kernel (`--verdict`).
 
 `bend test/spot.bend` evaluates both sides of many laws on concrete values.
 
