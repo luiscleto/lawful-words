@@ -1,0 +1,3 @@
+# build outputs
+*.bendtt
+/test/spot
