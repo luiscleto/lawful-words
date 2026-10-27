@@ -2,11 +2,14 @@ import Base
 
 # lawful-words definitions. The laws are in LAWS.bend.
 
-# 2^32. (A Nat literal of 2^32 or more is not allowed.)
+# 2^32, for prose and tests. The laws write Nat.pow(2n, 32n) inline instead:
+# the checker evaluates a named constant when comparing terms, and 2^32 in
+# unary is too deep to evaluate. (A Nat literal of 2^32 or more is not allowed.)
 def two32() -> Nat:
   Nat.pow(2n, 32n)
 
-# n modulo 2^32: the number U32.from_nat(n) stands for.
+# n modulo 2^32: the number U32.from_nat(n) stands for (the laws write
+# Nat.mod(n, Nat.pow(2n, 32n)) inline, for the same reason).
 def wrap(n: Nat) -> Nat:
   Nat.mod(n, two32())
 

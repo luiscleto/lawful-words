@@ -2,7 +2,8 @@ import Base
 import ./defs.bend as D
 
 # lawful-words: what Base's U32 operations compute, stated as arithmetic on
-# natural numbers. U32.to_nat(a) is the number a word stands for (0 to 2^32-1).
+# natural numbers. 2^32 is written Nat.pow(2n, 32n) in every law: Nat is unary,
+# and a named constant would be unfolded (and evaluated) by the checker. U32.to_nat(a) is the number a word stands for (0 to 2^32-1).
 # Each law says what an operation does to that number: modulo 2^32 in general,
 # and exactly when the result fits. Bytes inside a word (D.byte, D.put_byte,
 # D.pack4) get get/set laws, and a few facts about Nat that Base lacks come
@@ -15,7 +16,7 @@ import ./defs.bend as D
 # Every word stands for a number below 2^32.
 law to_nat_lt:
   for a: U32
-  {Nat.is_lt(U32.to_nat(a), D.two32()) == True{} : Bool}
+  {Nat.is_lt(U32.to_nat(a), Nat.pow(2n, 32n)) == True{} : Bool}
 
 # Two words that stand for the same number are the same word.
 law to_nat_inj:
@@ -30,13 +31,13 @@ law from_nat_to_nat:
 
 law to_nat_from_nat:
   for n: Nat
-  {U32.to_nat(U32.from_nat(n)) == D.wrap(n) : Nat}
+  {U32.to_nat(U32.from_nat(n)) == Nat.mod(n, Nat.pow(2n, 32n)) : Nat}
 
 # A number below 2^32 is unchanged by wrapping.
 law wrap_small:
   for n: Nat
-  for h: {Nat.is_lt(n, D.two32()) == True{} : Bool}
-  {D.wrap(n) == n : Nat}
+  for h: {Nat.is_lt(n, Nat.pow(2n, 32n)) == True{} : Bool}
+  {Nat.mod(n, Nat.pow(2n, 32n)) == n : Nat}
 
 # ==========================================================================
 # Comparisons
@@ -101,23 +102,23 @@ law is_eq_true:
 
 law to_nat_inc:
   for a: U32
-  {U32.to_nat(U32.inc(a)) == D.wrap(Nat.add(U32.to_nat(a), 1n)) : Nat}
+  {U32.to_nat(U32.inc(a)) == Nat.mod(Nat.add(U32.to_nat(a), 1n), Nat.pow(2n, 32n)) : Nat}
 
 law to_nat_add:
   for a: U32
   for b: U32
-  {U32.to_nat(U32.add(a, b)) == D.wrap(Nat.add(U32.to_nat(a), U32.to_nat(b))) : Nat}
+  {U32.to_nat(U32.add(a, b)) == Nat.mod(Nat.add(U32.to_nat(a), U32.to_nat(b)), Nat.pow(2n, 32n)) : Nat}
 
 # a - b wraps: it is a + 2^32 - b, modulo 2^32.
 law to_nat_sub:
   for a: U32
   for b: U32
-  {U32.to_nat(U32.sub(a, b)) == D.wrap(Nat.sub(Nat.add(U32.to_nat(a), D.two32()), U32.to_nat(b))) : Nat}
+  {U32.to_nat(U32.sub(a, b)) == Nat.mod(Nat.sub(Nat.add(U32.to_nat(a), Nat.pow(2n, 32n)), U32.to_nat(b)), Nat.pow(2n, 32n)) : Nat}
 
 law to_nat_mul:
   for a: U32
   for b: U32
-  {U32.to_nat(U32.mul(a, b)) == D.wrap(Nat.mul(U32.to_nat(a), U32.to_nat(b))) : Nat}
+  {U32.to_nat(U32.mul(a, b)) == Nat.mod(Nat.mul(U32.to_nat(a), U32.to_nat(b)), Nat.pow(2n, 32n)) : Nat}
 
 law from_nat_add:
   for x: Nat
@@ -143,7 +144,7 @@ law to_nat_inc_lt:
 law to_nat_add_fits:
   for a: U32
   for b: U32
-  for h: {Nat.is_lt(Nat.add(U32.to_nat(a), U32.to_nat(b)), D.two32()) == True{} : Bool}
+  for h: {Nat.is_lt(Nat.add(U32.to_nat(a), U32.to_nat(b)), Nat.pow(2n, 32n)) == True{} : Bool}
   {U32.to_nat(U32.add(a, b)) == Nat.add(U32.to_nat(a), U32.to_nat(b)) : Nat}
 
 law to_nat_sub_le:
@@ -155,7 +156,7 @@ law to_nat_sub_le:
 law to_nat_mul_fits:
   for a: U32
   for b: U32
-  for h: {Nat.is_lt(Nat.mul(U32.to_nat(a), U32.to_nat(b)), D.two32()) == True{} : Bool}
+  for h: {Nat.is_lt(Nat.mul(U32.to_nat(a), U32.to_nat(b)), Nat.pow(2n, 32n)) == True{} : Bool}
   {U32.to_nat(U32.mul(a, b)) == Nat.mul(U32.to_nat(a), U32.to_nat(b)) : Nat}
 
 # ==========================================================================
@@ -193,7 +194,7 @@ law to_nat_shr:
 
 law to_nat_shl:
   for a: U32
-  {U32.to_nat(U32.shl(a)) == D.wrap(Nat.mul(U32.to_nat(a), 2n)) : Nat}
+  {U32.to_nat(U32.shl(a)) == Nat.mod(Nat.mul(U32.to_nat(a), 2n), Nat.pow(2n, 32n)) : Nat}
 
 law to_nat_shrn:
   for a: U32
@@ -203,12 +204,12 @@ law to_nat_shrn:
 law to_nat_shln:
   for a: U32
   for k: Nat
-  {U32.to_nat(U32.shln(a, k)) == D.wrap(Nat.mul(U32.to_nat(a), Nat.pow(2n, k))) : Nat}
+  {U32.to_nat(U32.shln(a, k)) == Nat.mod(Nat.mul(U32.to_nat(a), Nat.pow(2n, k)), Nat.pow(2n, 32n)) : Nat}
 
 law to_nat_shln_fits:
   for a: U32
   for k: Nat
-  for h: {Nat.is_lt(Nat.mul(U32.to_nat(a), Nat.pow(2n, k)), D.two32()) == True{} : Bool}
+  for h: {Nat.is_lt(Nat.mul(U32.to_nat(a), Nat.pow(2n, k)), Nat.pow(2n, 32n)) == True{} : Bool}
   {U32.to_nat(U32.shln(a, k)) == Nat.mul(U32.to_nat(a), Nat.pow(2n, k)) : Nat}
 
 # A left shift by k leaves the low k bits zero.
@@ -260,7 +261,7 @@ law to_nat_and_mask:
 
 law to_nat_not:
   for a: U32
-  {U32.to_nat(U32.not(a)) == Nat.sub(Nat.sub(D.two32(), 1n), U32.to_nat(a)) : Nat}
+  {U32.to_nat(U32.not(a)) == Nat.sub(Nat.sub(Nat.pow(2n, 32n), 1n), U32.to_nat(a)) : Nat}
 
 # Or of a word with only bits from k up and a word below 2^k is their sum
 # (no bit in common). Xor likewise.
