@@ -14,4 +14,17 @@ with `bend` and with the Lean-proven kernel (`--verdict`).
 
 `bend test/spot.bend` evaluates both sides of many laws on concrete values.
 
+## Use
+
+Published on [BendHub](https://hub.bend-lang.com/name/lawful-words) with its laws and proofs. Bend fetches
+an import by name and checks it against the package's hash:
+
+```python
+import lawful-words@0.1.0.0/defs.bend as W   # the definitions the laws are about
+import lawful-words@0.1.0.0/LAWS.bend as L   # the laws, to use in your own proofs
+import lawful-words@0.1.0.0/PROOF.bend as P  # their proofs, which a proof using a law needs loaded
+```
+
+Versions below 1.0 have laws reviewed by three AI models but not yet by a human expert.
+
 MIT (see `LICENSE`).
