@@ -8,6 +8,8 @@ checks four bytes at once, is proven to agree with checking each byte in turn.
 
 ## Use
 
+Bend fetches these imports from [BendHub](https://hub.bend-lang.com/name/lawful-words) by name:
+
 ```python
 import lawful-words@0.1.0.0/defs.bend as W   # the byte helpers
 import lawful-words@0.1.0.0/LAWS.bend as L   # the laws, for your own proofs
