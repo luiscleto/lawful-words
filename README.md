@@ -11,16 +11,16 @@ checks four bytes at once, is proven to agree with checking each byte in turn.
 Bend fetches these imports from [BendHub](https://hub.bend-lang.com/name/lawful-words) by name:
 
 ```python
-import lawful-words@0.1.0.0/defs.bend as W   # the byte helpers
-import lawful-words@0.1.0.0/LAWS.bend as L   # the laws, for your own proofs
-import lawful-words@0.1.0.0/PROOF.bend as P  # their proofs, needed when a proof uses a law
+import lawful-words@0.1.0.1/defs.bend as W   # the byte helpers
+import lawful-words@0.1.0.1/LAWS.bend as L   # the laws, for your own proofs
+import lawful-words@0.1.0.1/PROOF.bend as P  # their proofs, needed when a proof uses a law
 ```
 
 Finding a byte in a word, four bytes at a time:
 
 ```python
 import Base
-import lawful-words@0.1.0.0/defs.bend as W
+import lawful-words@0.1.0.1/defs.bend as W
 
 # Is byte b anywhere in the word w? One test covers all four bytes.
 def has_byte(w: U32, b: U32) -> Bool:
@@ -78,7 +78,7 @@ def put_get(w, b, hb):
 ```
 
 The laws are proven. Below version 1.0 they have been reviewed by AI models but not yet by a human
-expert. [docs/LAWS.md](docs/LAWS.md) lists them all in plain words.
+expert. [docs/LAWS.md](https://github.com/luiscleto/lawful-words/blob/main/docs/LAWS.md) lists them all in plain words.
 
 ## License
 
